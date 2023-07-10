@@ -32,12 +32,19 @@ namespace NovaEnergies.Core.Services
 
                     if (resultPingFromFirstProvider)
                     {
-                        var resultFromProvider = await apiClient.SearchAsync(new Clients.Requests.ProviderOneSearchRequest { });
+                        if (apiClient.GetType() == typeof(Provider1ApiClient))
+                        {
+                            var resultFromProvider = await apiClient.SearchAsync(new Clients.Requests.ProviderOneSearchRequest { });
 
-                        resultRoutes.AddRange(resultFromProvider);
+                            resultRoutes.AddRange(resultFromProvider);
+                        }
+                        if (apiClient.GetType() == typeof(Provider2ApiClient))
+                        {
+                            var resultFromProvider = await apiClient.SearchAsync(new Clients.Requests.ProviderTwoSearchRequest { });
+
+                            resultRoutes.AddRange(resultFromProvider);
+                        }
                     }
-
-                    //response.Routes.AddRange(resultFromSecondProvider);
                 }
                 catch (Exception ex)
                 {
@@ -45,9 +52,9 @@ namespace NovaEnergies.Core.Services
                 }
             }
 
-            resultRoutes = resultRoutes.Where(x => x.StartDate >= request.DateFrom 
-            && x.EndDate <= request.DateTo 
-            && x.RoutePrice <= request.RoutePrice 
+            resultRoutes = resultRoutes.Where(x => x.StartDate >= request.DateFrom
+            && x.EndDate <= request.DateTo
+            && x.RoutePrice <= request.RoutePrice
             && x.TimeToLive >= request.TTL).ToList();
 
             response.Routes = resultRoutes;

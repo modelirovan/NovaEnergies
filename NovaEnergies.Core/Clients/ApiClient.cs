@@ -51,13 +51,7 @@ namespace NovaEnergies.Core.Clients
 
             RequestBase request = new RequestBase();
 
-            //var message = _messageHelper.CreateMessage(method, _clientSettings, request);
-
-            HttpRequestMessage message = new HttpRequestMessage
-            {
-                RequestUri = new Uri("https://www.code4it.dev/"),
-                Method = HttpMethod.Head
-            };
+            var message = _messageHelper.CreateMessage(method, _clientSettings, request);
 
             var response = await _executionHttpRequestClient.Execute<ProviderOneSearchResponse>(message, false);
 
@@ -102,13 +96,7 @@ namespace NovaEnergies.Core.Clients
 
             RequestBase request = new RequestBase();
 
-            //var message = _messageHelper.CreateMessage(method, _clientSettings, request);
-
-            HttpRequestMessage message = new HttpRequestMessage
-            {
-                RequestUri = new Uri("https://www.code4it.dev/"),
-                Method = HttpMethod.Head
-            };
+            var message = _messageHelper.CreateMessage(method, _clientSettings, request);
 
             var response = await _executionHttpRequestClient.Execute<ProviderOneSearchResponse>(message, false);
 
