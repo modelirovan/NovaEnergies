@@ -24,7 +24,7 @@ namespace NovaEnergies.Controllers
 
             var res = await _searchService.GetRoutesAsync(new Core.Clients.Requests.SearchServiceRequest
             {
-                TTL = DateTime.from ttl,
+                TTL = TimeSpan.FromMinutes(ttl),
                 DateFrom = startDate,
                 DateTo = endDate,
                 RoutePrice = price,
