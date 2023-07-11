@@ -75,12 +75,12 @@ namespace NovaEnergies.Core.Services
                         _cacheService.SetData(requestKey, resultRoutes, DateTimeOffset.Now.AddDays(1));
                     }
                 }
-            }
 
-            resultRoutes = resultRoutes.Where(x => x.StartDate >= request.DateFrom
-            && x.EndDate <= request.DateTo
-            && x.RoutePrice <= request.RoutePrice
-            && x.TimeToLive >= request.TTL).ToList();
+                resultRoutes = resultRoutes.Where(x => x.StartDate >= request.DateFrom
+                                                    && x.EndDate <= request.DateTo
+                                                    && x.RoutePrice <= request.RoutePrice
+                                                    && x.TimeToLive >= request.TTL).ToList();
+            }
 
             response.Routes = resultRoutes;
 
