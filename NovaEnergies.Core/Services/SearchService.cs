@@ -33,7 +33,12 @@ namespace NovaEnergies.Core.Services
 
             var routesFromCache = await _cacheService.GetRoutesAsync(requestKey);
 
-            if (request.Filter != Enums.FilterEnum.OnlyCached)
+            if (request.Filter == Enums.FilterEnum.OnlyCached)
+            {
+                resultRoutes = routesFromCache;
+            }
+
+            else
             {
                 if (!routesFromCache.Any())
                 {
