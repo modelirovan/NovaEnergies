@@ -87,7 +87,7 @@ namespace NovaEnergies.Core.Clients
 
             var routes = _mapper.Map<List<RouteDto>, List<Route>>(response.Result.Routes);
 
-            return routes;
+            return new List<Route>();
         }
 
         public async Task<bool> Ping()

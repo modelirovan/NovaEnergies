@@ -8,6 +8,7 @@ namespace NovaEnergies.Core.DTOs
 {
     public class RouteDto
     {
+        public Guid Guid { get; set; } = Guid.NewGuid();
         public PointDto StartPoint { get; set; }
         public PointDto EndPoint { get; set; }
         public DateTime StartDate { get; set; }

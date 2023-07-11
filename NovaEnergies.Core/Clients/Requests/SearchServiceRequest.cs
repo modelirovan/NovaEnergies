@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NovaEnergies.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,7 @@ namespace NovaEnergies.Core.Clients.Requests
         public DateTime DateTo { get; set; }
         public decimal RoutePrice { get; set; }
         public TimeSpan TTL { get; set; }
+
+        public FilterEnum Filter { get; set; } = FilterEnum.RequestToProviderAndCached;
     }
 }

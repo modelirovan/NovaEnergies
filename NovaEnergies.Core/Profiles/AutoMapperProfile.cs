@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using NovaEnergies.Core.Clients.Responses;
+using NovaEnergies.Core.DTOs;
 using NovaEnergies.Core.Types;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace NovaEnergies.Core.Profiles
     {
         public AutoMapperProfile()
         {
-            CreateMap<ProviderOneSearchResponse, Route>();
-            CreateMap<ProviderTwoSearchResponse, Route>();
+            CreateMap<RouteDto, Route>();
+            CreateMap<PointDto, Point>();
         }
     }
 }

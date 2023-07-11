@@ -13,10 +13,15 @@ namespace NovaEnergies.Core.Services
     public class SearchService : ISearchService
     {
         private readonly IEnumerable<IProviderApiClient> _apiClients;
+        private readonly ICacheService _cacheService;
 
-        public SearchService(IEnumerable<IProviderApiClient> apiClients)
+        public SearchService(
+            IEnumerable<IProviderApiClient> apiClients,
+            ICacheService cacheService
+            )
         {
             _apiClients = apiClients;
+            _cacheService = cacheService;
         }
         public async Task<SearchServiceResponse> GetRoutesAsync(SearchServiceRequest request)
         {
@@ -24,31 +29,46 @@ namespace NovaEnergies.Core.Services
 
             var resultRoutes = new List<Route>();
 
-            foreach (var apiClient in _apiClients)
+            var requestKey = $"dateFrom={request.DateFrom}'dateTo={request.DateTo}'routePrice={request.RoutePrice}'ttl={request.TTL}";
+
+            var routesFromCache = await _cacheService.GetRoutesAsync(requestKey);
+
+            if (request.Filter != Enums.FilterEnum.OnlyCached)
             {
-                try
+                if (!routesFromCache.Any())
                 {
-                    var resultPingFromFirstProvider = await apiClient.Ping();
-
-                    if (resultPingFromFirstProvider)
+                    foreach (var apiClient in _apiClients)
                     {
-                        if (apiClient.GetType() == typeof(Provider1ApiClient))
+                        try
                         {
-                            var resultFromProvider = await apiClient.SearchAsync(new Clients.Requests.ProviderOneSearchRequest { });
+                            var resultPingFromFirstProvider = await apiClient.Ping();
 
-                            resultRoutes.AddRange(resultFromProvider);
+                            if (resultPingFromFirstProvider)
+                            {
+                                if (apiClient.GetType() == typeof(Provider1ApiClient))
+                                {
+                                    var resultFromProvider = await apiClient.SearchAsync(new Clients.Requests.ProviderOneSearchRequest { });
+
+                                    resultRoutes.AddRange(resultFromProvider);
+                                }
+                                if (apiClient.GetType() == typeof(Provider2ApiClient))
+                                {
+                                    var resultFromProvider = await apiClient.SearchAsync(new Clients.Requests.ProviderTwoSearchRequest { });
+
+                                    resultRoutes.AddRange(resultFromProvider);
+                                }
+                            }
                         }
-                        if (apiClient.GetType() == typeof(Provider2ApiClient))
+                        catch (Exception ex)
                         {
-                            var resultFromProvider = await apiClient.SearchAsync(new Clients.Requests.ProviderTwoSearchRequest { });
-
-                            resultRoutes.AddRange(resultFromProvider);
+                            //log
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    //log
+
+                    if (resultRoutes.Any())
+                    {
+                        _cacheService.SetData(requestKey, resultRoutes, DateTimeOffset.Now.AddDays(1));
+                    }
                 }
             }
 

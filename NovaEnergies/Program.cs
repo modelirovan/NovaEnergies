@@ -4,12 +4,14 @@ using NovaEnergies.Core.Settings;
 using AutoMapper;
 using NovaEnergies.Core.Profiles;
 using NovaEnergies.Core.Helpers;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-
+builder.Services.AddSingleton<IConnectionMultiplexer>(opt =>
+ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnection")));
 
 builder.Services.AddControllers();
 
@@ -33,7 +35,7 @@ builder.Services.AddSingleton<IProviderApiClient, Provider2ApiClient>();
 builder.Services.AddAutoMapper(s => s.AddProfile<AutoMapperProfile>());
 builder.Services.AddSingleton<IMessageHelper, MessageHelper>();
 
-
+builder.Services.AddSingleton<ICacheService, CacheService>();
 
 var app = builder.Build();
 

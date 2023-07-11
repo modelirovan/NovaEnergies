@@ -8,7 +8,7 @@ namespace NovaEnergies.Core.Types
 {
     public class Route
     {
-        public Guid Guid { get; set; }
+        public Guid Guid { get; set; } 
         public Point StartPoint { get; set; }
         public Point EndPoint { get; set; }
         public DateTime StartDate { get; set; }

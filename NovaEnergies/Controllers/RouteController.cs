@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NovaEnergies.Core.Enums;
 using NovaEnergies.Core.Services;
+using StackExchange.Redis;
 
 namespace NovaEnergies.Controllers
 {
@@ -17,8 +19,7 @@ namespace NovaEnergies.Controllers
 
         [HttpGet]
         [Route("search/")]
-        [ResponseCache(Duration = 30)]
-        public async Task<IActionResult> GetRoutesAsync(DateTime startDate, DateTime endDate, decimal price, int ttl)
+        public async Task<IActionResult> GetRoutesAsync(DateTime startDate, DateTime endDate, decimal price, int ttl, FilterEnum filter)
         {
             var routes = new List<Route>();
 
@@ -28,6 +29,7 @@ namespace NovaEnergies.Controllers
                 DateFrom = startDate,
                 DateTo = endDate,
                 RoutePrice = price,
+                Filter = filter
             });
 
             return Json(res);
@@ -43,9 +45,13 @@ namespace NovaEnergies.Controllers
 
         [HttpGet]
         [Route("time/{number}")]
-        [ResponseCache(Duration = 30)]
+       // [ResponseCache(Duration = 30)]
         public int Get(int number)
         {
+            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
+            IDatabase db = redis.GetDatabase();
+            var val = db.StringGet("vadik");
+
             return DateTime.Now.Second;
         }
 
